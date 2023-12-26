@@ -1,0 +1,26 @@
+<nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <h1 class="logo ms-4">
+      <a class="navbar-brand"><img src="assets/img/swse-tools.png" alt="SWSE Tools logo"></a>
+    </h1>
+
+    <button class="navbar-toggler" type="button"
+            data-bs-toggle="collapse" data-bs-target="#navbarMenu"
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMenu">
+      <ul class="navbar-nav ms-auto mb-2 me-4 mb-lg-0">
+        <li class="nav-item">
+          <!--<a class="nav-link active" aria-current="page" href="#">Home</a>-->
+          <app-mat-button [btnId]="'commoditiesBtn'"
+                          [buttonLabel]="'Commodities'" [btnClass]="'nav-link d-flex align-items-center'"
+                          [matIcon]="'list_alt'" [btnHref]="'#home'">
+          </app-mat-button>
+        </li>
+
+      </ul>
+    </div>
+
+  </div>
+</nav>

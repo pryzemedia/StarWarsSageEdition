@@ -1,1 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+#hero .container {
+  padding-top: 72px;
+}
+
+.dark-header{
+  border: 1px solid #4a4a4a;
+  background: #4a4a4a;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.purple-header{
+  border: 1px solid #563C86;
+  background: #563C86;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.blue-header{
+  border: 1px solid #154f7e;
+  background: #154f7e;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.green-header{
+  border: 1px solid #126439;
+  background: #126439;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+.lt-purple-header{
+  border: 1px solid #B3A1D9;
+  background: #B3A1D9;
+  color: #333;
+  font-weight: 500;
+  font-size: 16px;
+}
+.red-header{
+  border: 1px solid #930012;
+  background: #930012;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}
+.lt-red-header{
+  border: 1px solid #FFBDC3;
+  background: #FFBDC3;
+  color: #fff;
+  font-weight: 500;
+  font-size: 16px;
+}

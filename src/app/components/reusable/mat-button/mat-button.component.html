@@ -1,0 +1,30 @@
+<ng-container *ngIf="btnHref.length > 0 || btnRouterLink.length > 0; else buttonTemplate">
+  <a *ngIf="btnHref.length > 0" [href]="btnHref"
+     [class]="btnClass"
+     [id]="btnId">
+    <!--<mat-icon class="me-2" fontIcon="{{matIcon}}"></mat-icon>-->
+    <span aria-hidden="false" [attr.aria-label]="matIcon + ' icon'"
+          [class]="'material-icons me-2'">{{matIcon}}</span>
+    <span>{{buttonLabel}}</span>
+  </a>
+  <a *ngIf="btnRouterLink.length > 0"
+     routerLink="{{btnRouterLink}}" ]
+     [class]="btnClass"
+     [id]="btnId">
+    <!--<mat-icon class="me-2" fontIcon="{{matIcon}}"></mat-icon>-->
+    <span aria-hidden="false" [attr.aria-label]="matIcon + ' icon'"
+          [class]="'material-icons me-2'">{{matIcon}}</span>
+    <span>{{buttonLabel}}</span>
+  </a>
+</ng-container>
+
+<ng-template #buttonTemplate>
+
+  <button #btnInstance [class]="btnClass"
+          [id]="buttonLabel"
+          (click)="emitBtn1Action(btnInstance)">
+    <span aria-hidden="false" [attr.aria-label]="matIcon + ' icon'"
+          [class]="'material-icons me-2'">{{matIcon}}</span>
+    <span>{{buttonLabel}}</span>
+  </button>
+</ng-template>

@@ -1,0 +1,262 @@
+<div id="hero">
+  <div class="container mt-5">
+    <h2 class="mb-4 mt-5">Price Adjustment</h2>
+    <p *ngIf="timestamp">Timestamp: {{ timestamp | date: 'medium' }}</p>
+    <div class="row">
+      <div class="col-md-6">
+        <card-header [matIcon]="'storefront'"
+                     [headerTxt]="'Commodities'">
+
+          <div *ngFor="let commodity of commodities; index as i" class="form-group row">
+            <label [for]="'com_' + i" class="col-sm-8 col-form-label">{{ commodity.name }} Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" [id]="'com_' + i" [(ngModel)]="commodity.basePrice">
+            </div>
+          </div>
+          <!--<div class="form-group row">
+            <label for="exoticAnimalPerAnimal" class="col-sm-8 col-form-label">Animal, Exotic Per Animal (1.5 Tons) Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="exoticAnimalPerAnimal" [(ngModel)]="basePrices.exoticAnimalPerAnimal">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="livestockAnimalPerAnimal" class="col-sm-8 col-form-label">Animal, Livestock Per Animal (720 KG) Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="livestockAnimalPerAnimal" [(ngModel)]="basePrices.livestockAnimalPerAnimal">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="commonArtPerPiece" class="col-sm-8 col-form-label">Art, Common Per Art Piece (25 KG) Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="commonArtPerPiece" [(ngModel)]="basePrices.commonArtPerPiece">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="qualityArtPerPiece" class="col-sm-8 col-form-label">Art, Quality Per Art Piece (100 KG) Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="qualityArtPerPiece" [(ngModel)]="basePrices.qualityArtPerPiece">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="qualityArtPerPiece" class="col-sm-8 col-form-label">Art, Precious Per Art Piece (1 Ton) Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="qualityArtPerPiece" [(ngModel)]="basePrices.preciousArtPerPiece">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="bactaPerKG" class="col-sm-8 col-form-label">Bacta, 1 Liter Per KG Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="bactaPerKG" [(ngModel)]="basePrices.bactaPerKG">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="commonFoodPerKG" class="col-sm-8 col-form-label">Food, Common Per KG Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="commonFoodPerKG" [(ngModel)]="basePrices.commonFoodPerKG">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="commonFoodPerKG" class="col-sm-8 col-form-label">Food, Quality Per KG Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="commonFoodPerKG" [(ngModel)]="basePrices.qualityFoodPerKG">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="exoticFoodPerKG" class="col-sm-8 col-form-label">Food, Exotic Per KG Base
+              Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="exoticFoodPerKG" [(ngModel)]="basePrices.exoticFoodPerKG">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="fuelPerLiter" class="col-sm-8 col-form-label">Fuel at 1 Liter Per KG Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="fuelPerLiter" [(ngModel)]="basePrices.fuelPerLiter">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="semiGemPerGram" class="col-sm-8 col-form-label">Semiprecious Gems Per Gram Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="semiGemPerGram" [(ngModel)]="basePrices.semiGemPerGram">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="preciousGemPerGram" class="col-sm-8 col-form-label">Precious Gems Per Gram Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="preciousGemPerGram" [(ngModel)]="basePrices.preciousGemPerGram">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="exoticGemPerGram" class="col-sm-8 col-form-label">Exotic Gems Per Gram Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="exoticGemPerGram" [(ngModel)]="basePrices.exoticGemPerGram">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="holovidPerVideo" class="col-sm-8 col-form-label">Holovid Per Video Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="holovidPerVideo" [(ngModel)]="basePrices.holovidPerVideo">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="metalCommonPerTon" class="col-sm-8 col-form-label">Metal, Processed Common Per Ton Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="metalCommonPerTon" [(ngModel)]="basePrices.metalCommonPerTon">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metalSemiPerKG" class="col-sm-8 col-form-label">Metal, Processed Semi-Precious Gems Per KG Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="metalSemiPerKG" [(ngModel)]="basePrices.metalSemiPerKG">
+            </div>
+          </div>
+          <div class="form-group row">
+            <label for="metalPreciousPerKG" class="col-sm-8 col-form-label">Metal, Processed Precious Per KG Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="metalPreciousPerKG" [(ngModel)]="basePrices.metalPreciousPerKG">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="orePerTon" class="col-sm-8 col-form-label">Common Ore Per Ton Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="orePerTon" [(ngModel)]="basePrices.oreCommonPerTon">
+            </div>
+          </div>
+          <hr />
+          <div class="form-group row">
+            <label for="goodsPerKG" class="col-sm-8 col-form-label">Common Manufactured Goods Per KG Base Price:</label>
+            <div class="col-sm-4">
+              <input type="number" class="form-control" id="goodsPerKG" [(ngModel)]="basePrices.goodsPerKG">
+            </div>
+
+          </div>-->
+        </card-header>
+        <button class="btn btn-primary mt-2 mb-2" (click)="calculateAdjustedPrices()">Calculate Adjusted Prices</button>
+      </div>
+
+      <div class="col-md-6">
+        <h4 class="mb-4">Adjusted Prices:</h4>
+        <ul class="list-group">
+          <li *ngFor="let commodity2 of commodities; index as j" class="list-group-item">
+            {{ commodity2.name }}:
+            <strong [ngClass]="commodity2.basePrice  > commodity2.adjustedPrice  ? 'text-danger' : ''">
+            {{ commodity2.adjustedPrice | number }}</strong>
+          </li>
+          <!--<li class="list-group-item">
+            Animal, Exotic Per Animal (1.5 Tons):
+            <strong [ngClass]="basePrices.exoticAnimalPerAnimal > adjustedPrices.exoticAnimalPerAnimal ? 'text-danger' : ''">
+            {{ adjustedPrices.exoticAnimalPerAnimal | number }}</strong>
+          </li>
+          <li class="list-group-item pb-4">
+            Animal, Livestock Per Animal (720 KG):
+            <strong [ngClass]="basePrices.livestockAnimalPerAnimal > adjustedPrices.livestockAnimalPerAnimal ? 'text-danger' : ''">
+            {{ adjustedPrices.livestockAnimalPerAnimal | number }}</strong>
+          </li>
+          <li class="list-group-item pt-3">
+            Art, Common Per Art Piece (25 KG):
+            <strong [ngClass]="basePrices.commonArtPerPiece > adjustedPrices.commonArtPerPiece ? 'text-danger' : ''">
+              {{ adjustedPrices.commonArtPerPiece | number }}</strong>
+          </li>
+          <li class="list-group-item">
+            Art, Quality Per Art Piece (100 KG):
+            <strong [ngClass]="basePrices.qualityArtPerPiece > adjustedPrices.qualityArtPerPiece ? 'text-danger' : ''">
+              {{ adjustedPrices.qualityArtPerPiece | number }}</strong>
+          </li>
+          <li class="list-group-item pb-4">
+            Art, Precious Per Art Piece (1 Ton):
+            <strong [ngClass]="basePrices.preciousArtPerPiece > adjustedPrices.preciousArtPerPiece ? 'text-danger' : ''">
+              {{ adjustedPrices.preciousArtPerPiece | number }}</strong>
+          </li>
+          <li class="list-group-item pt-3 pb-4">
+            Bacta, 1 Liter Per KG:
+            <strong [ngClass]="basePrices.bactaPerKG > adjustedPrices.bactaPerKG ? 'text-danger' : ''">
+              {{ adjustedPrices.bactaPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item pt-3">
+            Food, Common Per KG:
+            <strong [ngClass]="basePrices.commonFoodPerKG > adjustedPrices.commonFoodPerKG ? 'text-danger' : ''">
+              {{ adjustedPrices.commonFoodPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item">
+            Food, Quality Per KG:
+            <strong [ngClass]="basePrices.qualityFoodPerKG > adjustedPrices.qualityArtPerPiece ? 'text-danger' : ''">
+              {{ adjustedPrices.qualityFoodPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item pb-4">
+            Food, Exotic Per KG:
+            <strong [ngClass]="basePrices.exoticFoodPerKG > adjustedPrices.exoticFoodPerKG ? 'text-danger' : ''">
+              {{ adjustedPrices.exoticFoodPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4 pb-4">
+            Fuel at 1 Liter Per KG:
+            <strong [ngClass]="basePrices.fuelPerLiter > adjustedPrices.fuelPerLiter ? 'text-danger' : ''">
+              {{ adjustedPrices.fuelPerLiter | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4">
+            Semiprecious Gems Per Gram:
+            <strong [ngClass]="basePrices.semiGemPerGram > adjustedPrices.semiGemPerGram ? 'text-danger' : ''">
+            {{ adjustedPrices.semiGemPerGram | number }}</strong>
+          </li>
+          <li class="list-group-item">
+            Precious Gems Per Gram:
+            <strong [ngClass]="basePrices.preciousGemPerGram > adjustedPrices.preciousGemPerGram ? 'text-danger' : ''">
+              {{ adjustedPrices.preciousGemPerGram | number }}</strong>
+          </li>
+          <li class="list-group-item pb-3">
+            Exotic Gems Per Gram:
+            <strong [ngClass]="basePrices.exoticGemPerGram > adjustedPrices.exoticGemPerGram ? 'text-danger' : ''">
+              {{ adjustedPrices.exoticGemPerGram | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4 pb-4">
+            Holovid Per Video:
+            <strong [ngClass]="basePrices.holovidPerVideo > adjustedPrices.holovidPerVideo ? 'text-danger' : ''">
+              {{ adjustedPrices.holovidPerVideo | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4">
+            Metal, Processed Common Per Ton:
+            <strong [ngClass]="basePrices.metalCommonPerTon > adjustedPrices.metalCommonPerTon ? 'text-danger' : ''">
+              {{ adjustedPrices.metalCommonPerTon | number }}</strong>
+          </li>
+          <li class="list-group-item pb-4">
+            Metal, Processed Semi-Precious Per KG:
+            <strong [ngClass]="basePrices.metalSemiPerKG > adjustedPrices.metalSemiPerKG ? 'text-danger' : ''">
+              {{ adjustedPrices.metalSemiPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item pb-4">
+            Metal, Processed Precious Per KG:
+            <strong [ngClass]="basePrices.metalPreciousPerKG > adjustedPrices.metalPreciousPerKG ? 'text-danger' : ''">
+              {{ adjustedPrices.metalPreciousPerKG | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4 pb-4">
+            Common Ore Per Ton:
+            <strong [ngClass]="basePrices.oreCommonPerTon > adjustedPrices.oreCommonPerTon ? 'text-danger' : ''">
+            {{ adjustedPrices.oreCommonPerTon | number }}</strong>
+          </li>
+          <li class="list-group-item pt-4">
+            Common Manufactured Goods Per KG:
+            <strong [ngClass]="basePrices.goodsPerKG > adjustedPrices.goodsPerKG ? 'text-danger' : ''">
+            {{ adjustedPrices.goodsPerKG | number }}</strong>
+          </li>-->
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+

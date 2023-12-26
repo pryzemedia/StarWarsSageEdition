@@ -1,0 +1,17 @@
+<div class="card {{cardClass}}">
+  <div class="card-header {{headerClass}}">
+    <ng-container *ngIf="matIcon.length > 0; else noIcon">
+      <span class="d-flex align-items-center">
+        <mat-icon class="me-2" fontIcon="{{matIcon}}"></mat-icon>
+        {{headerTxt}}
+      </span>
+    </ng-container>
+    <ng-template #noIcon>
+      {{headerTxt}}
+    </ng-template>
+
+  </div>
+  <div class="card-body">
+    <ng-content></ng-content>
+  </div>
+</div>
