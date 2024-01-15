@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
+import {RouterOutlet } from '@angular/router';
 import {HeaderComponent} from "./components/header/header.component";
+
+
+import {routes} from "./app.routes";
 
 @Component({
   selector: 'app-root',
@@ -11,5 +14,6 @@ import {HeaderComponent} from "./components/header/header.component";
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'main-site';
+  title = 'SWSE Tools';
 }
+

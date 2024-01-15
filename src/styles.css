@@ -59,3 +59,66 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   font-weight: 500;
   font-size: 16px;
 }
+
+.yellow-header,
+.accordion-button.yellow-header,
+.accordion-button:not(.collapsed).yellow-header{
+  border: 1px solid #FFC107;
+  background: #FFC107;
+  color: #000;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.lt-yellow-header,
+.accordion-button.lt-yellow-header,
+.accordion-button:not(.collapsed).lt-yellow-header{
+  border: 1px solid #FFC107;
+  background: #fff3cd;
+  color: #000;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.label-primary{
+  color: #084298;
+  background-color: #cfe2ff;
+}
+
+.label-success{
+  color: #0f5132;
+  background-color: #d1e7dd;
+}
+
+.label-danger{
+  color: #842029;
+  background-color: #f8d7da;
+}
+
+.label-warning{
+  color: #664d03;
+  background-color: #fff3cd;
+}
+
+.label-info{
+  color: #055160;
+  background-color: #cff4fc;
+}
+
+label-light{
+  color: #636464;
+  background-color: #fefefe;
+}
+
+.list-group-item .btn{
+  --bs-btn-padding-y: 0.2rem;
+  --bs-btn-font-size: .0001rem;
+}
+
+.list-group-item .btn .material-icons{
+  /*font-size: 20px;*/
+}
+
+.alert{
+  word-wrap: break-word;
+}

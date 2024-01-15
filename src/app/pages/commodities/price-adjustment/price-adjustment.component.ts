@@ -1,7 +1,16 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {CardHeaderComponent} from "../../../components/reusable/card-header/card-header.component";
+import {ActivatedRoute, Router} from "@angular/router";
+//import {MatButtonComponent} from "../../../components/reusable/mat-button/mat-button.component";
+import {MatIconModule} from "@angular/material/icon";
+import {ClipboardModule} from "@angular/cdk/clipboard";
+import {Clipboard} from "@angular/cdk/clipboard";
+import {HttpPostService} from "../../../services/http-post.service";
+import {CollapseAccComponent} from "../../../components/reusable/collapse/collapse-acc.component";
+import {CollapseBtnComponent} from "../../../components/reusable/collapse-btn/collapse-btn.component";
+
 
 interface Commodity {
   name: string;
@@ -10,99 +19,104 @@ interface Commodity {
   demandFactor: number;
   eventFactor: number;
   adjustedPrice: number;
+  colorClass:string;
+  hideItem: boolean;
+  category?: string;
+  icon?: string;
+  bgClass?: string;
 }
 
 @Component({
   selector: 'app-price-adjustment',
   standalone: true,
-  imports: [CommonModule, FormsModule, CardHeaderComponent],
+  imports: [CommonModule, FormsModule, CardHeaderComponent, MatIconModule, ClipboardModule, CollapseAccComponent, CollapseBtnComponent],
   templateUrl: './price-adjustment.component.html',
   styleUrls: ['./price-adjustment.component.css']
 })
-export class PriceAdjustmentComponent {
+export class PriceAdjustmentComponent implements OnInit{
 
   timestamp: Date | null = null;
+  //read only, 0 = false, 1 = true
+  ro: number = 0;
+  readOnly: boolean = false;
+  urlWithParams: string = '';
+  readOnlyURL: string = '';
 
-  /*basePrices = {
-    commonAnimalPerAnimal: 100.00,
-    exoticAnimalPerAnimal: 2000.00,
-    livestockAnimalPerAnimal: 500,
-    commonArtPerPiece: 100.00,
-    qualityArtPerPiece: 1000.00,
-    preciousArtPerPiece: 10000.00,
-    bactaPerKG: 100.00,
-    commonFoodPerKG: 10.00,
-    qualityFoodPerKG: 20.00,
-    exoticFoodPerKG: 50.00,
-    semiGemPerGram: 100.00,
-    preciousGemPerGram: 1000.00,
-    exoticGemPerGram: 10000.00,
-    holovidPerVideo: 10.0,
-    metalCommonPerTon: 2500.00,
-    metalSemiPerKG: 200.00,
-    metalPreciousPerKG:10000.00,
-    fuelPerLiter: 50.00,
-    oreCommonPerTon: 1500.00,
-    oreSemiPerKG: 150.0,
-    orePreciousPerKG: 7500.00,
-    goodsPerKG: 2250.00
-  };
+  queryString: string = "";
 
-  adjustedPrices = {
-    commonAnimalPerAnimal: 0,
-    exoticAnimalPerAnimal: 0,
-    livestockAnimalPerAnimal: 0,
-    commonArtPerPiece: 0,
-    qualityArtPerPiece: 0,
-    preciousArtPerPiece: 0,
-    bactaPerKG: 0,
-    commonFoodPerKG: 0,
-    qualityFoodPerKG:0,
-    exoticFoodPerKG: 0,
-    semiGemPerGram: 0,
-    exoticGemPerGram: 0,
-    holovidPerVideo: 0,
-    metalCommonPerTon: 0,
-    metalSemiPerKG: 0,
-    metalPreciousPerKG:0,
-    preciousGemPerGram: 0,
-    fuelPerLiter: 0,
-    oreCommonPerTon: 0,
-    oreSemiPerKG: 0,
-    orePreciousPerKG: 0,
-    goodsPerKG: 0
-  };*/
+  constructor(private router: Router,
+              private route: ActivatedRoute,
+              private clipboard: Clipboard,
+              private postService:HttpPostService) {}
+
 
   commodities: Commodity[] = [
-    { name: 'Animal, Common Per Animal', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Animal, Exotic Per Animal', basePrice: 2000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Animal, Livestock Per Animal', basePrice: 500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Art, Common Per Art Piece', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Art, Quality Per Art Piece', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Art, Precious Per Art Piece', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Bacta, 1 Liter Per KG', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Gems, Semiprecious Per Gram', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Gems, Precious Per Gram', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Gems, Exotic Per Gram', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Holovid Per Video', basePrice: 10.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Metal, Processed Common Per Ton', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Metal, Processed Semiprecious Per KG', basePrice: 150.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Metal, Processed Precious Per KG', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Ore, Common Per Ton', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Ore, Semiprecious Per KG', basePrice: 150.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Ore, Precious Per KG', basePrice: 7500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Manufactured Goods, Common Per KG', basePrice: 2250.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Manufactured Goods, Industrial Per KG', basePrice: 3500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Manufactured Goods, Military Per KG', basePrice: 5000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Manufactured Goods, Agricultural Per KG', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Water, 1 Liter Per KG', basePrice: 1.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Spice, Common Per KG', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Spice, Exotic Per Gram', basePrice: 20.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Slave, Common Per Slave', basePrice: 500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Slave, Experienced Per Slave', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Slave, Military Per Slave', basePrice: 2000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Weapons, Common Per Ton', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
-    { name: 'Weapons, Illegal Per Ton', basePrice: 20000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 },
+    { name: 'Animal, Common Per Animal', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+    colorClass: 'primary', hideItem:false, category: 'Animals', icon: 'pets', bgClass: 'blue-header'},
+    { name: 'Animal, Exotic Per Animal', basePrice: 2000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'success', hideItem:false, category: 'Animals'},
+    { name: 'Animal, Livestock Per Animal', basePrice: 500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'warning', hideItem:false, category: 'Animals'},
+    { name: 'Art, Common Per Art Piece', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Luxury Goods', icon: 'diamond', bgClass: 'purple-header'},
+    { name: 'Art, Quality Per Art Piece', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Art, Precious Per Art Piece', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'success', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Bacta, 1 Liter Per KG', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Gems, Semiprecious Per Gram', basePrice: 100.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Gems, Precious Per Gram', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Gems, Exotic Per Gram', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'success', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Holovid Per Video', basePrice: 10.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Luxury Goods'},
+    { name: 'Metal, Processed Common Per Ton', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Industrial Goods', icon: 'construction', bgClass: 'lt-purple-header'},
+    { name: 'Metal, Processed Semiprecious Per KG', basePrice: 150.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Metal, Processed Precious Per KG', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'success', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Ore, Common Per Ton', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Ore, Semiprecious Per KG', basePrice: 150.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Ore, Precious Per KG', basePrice: 7500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0 ,
+      colorClass: 'success', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Manufactured Goods, Common Per KG', basePrice: 2250.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Manufactured Goods, Industrial Per KG', basePrice: 3500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Manufactured Goods, Military Per KG', basePrice: 5000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Manufactured Goods, Agricultural Per KG', basePrice: 1500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'warning', hideItem:false, category: 'Industrial Goods'},
+    { name: 'Food, Common Per KG', basePrice: 10.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Food and Fuel', icon: 'fastfood', bgClass: 'green-header'},
+    { name: 'Food, Quality Per KG', basePrice: 20.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'danger', hideItem:false, category: 'Food and Fuel'},
+    { name: 'Food, Exotic Per KG', basePrice: 50.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'success', hideItem:false, category: 'Food and Fuel'},
+    { name: 'Fuel, 1 Liter Per KG', basePrice: 50.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Food and Fuel'},
+    { name: 'Water, 1 Liter Per KG', basePrice: 1.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'primary', hideItem:false, category: 'Food and Fuel'},
+    { name: 'Spice, Common Per KG', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods', icon: 'dangerous', bgClass: 'red-header'},
+    { name: 'Spice, Exotic Per Gram', basePrice: 20.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
+    { name: 'Slave, Common Per Slave', basePrice: 500.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
+    { name: 'Slave, Experienced Per Slave', basePrice: 1000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
+    { name: 'Slave, Military Per Slave', basePrice: 2000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
+    { name: 'Weapons, Common Per Ton', basePrice: 10000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
+    { name: 'Weapons, Illegal Per Ton', basePrice: 20000.0, supplyFactor: 0, demandFactor: 0, eventFactor: 0, adjustedPrice: 0,
+      colorClass: 'light', hideItem:false, category: 'Illegal Goods'},
   ];
 
   calculateAdjustedPrices() {
@@ -112,47 +126,179 @@ export class PriceAdjustmentComponent {
       commodity.demandFactor = this.getRandomFactor();
       commodity.eventFactor = this.getRandomFactor();
 
+      //const priceFactors = (1 + commodity.supplyFactor + commodity.demandFactor + commodity.eventFactor);
+      //console.log(commodity.name + 'priceFactors = ' + priceFactors + ", commodity.basePrice = " + commodity.basePrice);
       // Adjusted Price Calculation
       const priceFactors = 1 + commodity.supplyFactor + commodity.demandFactor + commodity.eventFactor;
+      //commodity.adjustedPrice = commodity.basePrice * priceFactors;
+
       commodity.adjustedPrice = commodity.basePrice * priceFactors;
     });
-   /* this.adjustedPrices.commonAnimalPerAnimal = this.calculateAdjustedPrice(this.basePrices.commonAnimalPerAnimal);
-    this.adjustedPrices.exoticAnimalPerAnimal = this.calculateAdjustedPrice(this.basePrices.exoticAnimalPerAnimal);
-    this.adjustedPrices.livestockAnimalPerAnimal = this.calculateAdjustedPrice(this.basePrices.livestockAnimalPerAnimal);
-    this.adjustedPrices.commonArtPerPiece = this.calculateAdjustedPrice(this.basePrices.commonArtPerPiece);
-    this.adjustedPrices.qualityArtPerPiece = this.calculateAdjustedPrice(this.basePrices.qualityArtPerPiece);
-    this.adjustedPrices.preciousArtPerPiece = this.calculateAdjustedPrice(this.basePrices.preciousArtPerPiece);
-    this.adjustedPrices.bactaPerKG = this.calculateAdjustedPrice(this.basePrices.bactaPerKG);
-    this.adjustedPrices.commonFoodPerKG = this.calculateAdjustedPrice(this.basePrices.commonFoodPerKG);
-    this.adjustedPrices.qualityFoodPerKG = this.calculateAdjustedPrice(this.basePrices.qualityFoodPerKG);
-    this.adjustedPrices.exoticFoodPerKG = this.calculateAdjustedPrice(this.basePrices.exoticFoodPerKG);
-    this.adjustedPrices.fuelPerLiter = this.calculateAdjustedPrice(this.basePrices.fuelPerLiter);
-    this.adjustedPrices.semiGemPerGram = this.calculateAdjustedPrice(this.basePrices.semiGemPerGram);
-    this.adjustedPrices.exoticGemPerGram = this.calculateAdjustedPrice(this.basePrices.exoticGemPerGram);
-    this.adjustedPrices.preciousGemPerGram = this.calculateAdjustedPrice(this.basePrices.preciousGemPerGram);
-    this.adjustedPrices.holovidPerVideo = this.calculateAdjustedPrice(this.basePrices.holovidPerVideo);
-    this.adjustedPrices.metalCommonPerTon = this.calculateAdjustedPrice(this.basePrices.metalCommonPerTon);
-    this.adjustedPrices.metalSemiPerKG = this.calculateAdjustedPrice(this.basePrices.metalSemiPerKG);
-    this.adjustedPrices.metalPreciousPerKG = this.calculateAdjustedPrice(this.basePrices.metalPreciousPerKG);
-    this.adjustedPrices.oreCommonPerTon = this.calculateAdjustedPrice(this.basePrices.oreCommonPerTon);
-    this.adjustedPrices.oreSemiPerKG = this.calculateAdjustedPrice(this.basePrices.oreSemiPerKG);
-    this.adjustedPrices.orePreciousPerKG = this.calculateAdjustedPrice(this.basePrices.orePreciousPerKG);
-    this.adjustedPrices.goodsPerKG = this.calculateAdjustedPrice(this.basePrices.goodsPerKG);*/
+
+    // Update the URL
+    this.updateUrl();
+
+    // Make the HTTP POST request  -- Connects to PHP file
+   /* this.postService
+      .calculateAdjustedPrices({ commodities: this.commodities })
+      .subscribe(
+        (response) => {
+          console.log('Server response:', response);
+          // Handle the response as needed
+        },
+        (error) => {
+          console.error('Error:', error);
+          // Handle errors
+        }
+      );*/
   }
 
-  /*private calculateAdjustedPrice(basePrice: number): number {
-    const supplyFactor = this.getRandomFactor();
-    const demandFactor = this.getRandomFactor();
-    const eventFactor = this.getRandomFactor();
-
-    const adjustmentPercentage = (supplyFactor + demandFactor + eventFactor) / 3;
-    const adjustedPrice = basePrice * (1 + adjustmentPercentage);
-
-    return parseFloat(adjustedPrice.toFixed(2));
-  }*/
+  copyUrlToClipboard() {
+    this.clipboard.copy( this.readOnlyURL);
+  }
 
   private getRandomFactor(): number {
-    // Generate a random number between -0.5 and 0.5
-    return (Math.random() * 1.0) - .5;
+    return Math.random() * 0.6 - 0.3; // Generates a random number between -0.3 and 0.3
   }
+
+  updateUrl() {
+    /*const queryParams = {
+      commodities: JSON.stringify(this.commodities),
+      timestamp: this.timestamp,
+      ro: this.ro
+    };
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+      queryParamsHandling: 'merge',
+    });*/
+
+    //this.readOnlyURL = this.router.serializeUrl(this.router.createUrlTree([], {
+    let readOnlyUrlTree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: {
+        commodities: JSON.stringify(this.commodities),
+        timestamp: this.timestamp,
+        ro: 1,
+      },
+    });
+
+   // this.urlWithParams = this.router.serializeUrl(this.router.createUrlTree([], {
+    let urlWithParamsTree = this.router.createUrlTree([], {
+      relativeTo: this.route,
+      queryParams: {
+        commodities: JSON.stringify(this.commodities),
+        timestamp: this.timestamp,
+        ro: this.ro,
+      },
+    });
+
+    this.readOnlyURL = this.router.serializeUrl(readOnlyUrlTree);
+    this.urlWithParams = this.router.serializeUrl(urlWithParamsTree);
+
+    // Remove the leading '/?' from the URLs
+    if (this.readOnlyURL.startsWith('/?')) {
+      this.readOnlyURL = this.readOnlyURL.substring(2);
+    }
+
+    if (this.urlWithParams.startsWith('/?')) {
+      this.urlWithParams = this.urlWithParams.substring(2);
+    }
+
+    /*this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {
+        commodities: JSON.stringify(this.commodities),
+        timestamp: this.timestamp,
+        ro: this.ro,
+      },
+      queryParamsHandling: 'merge',
+    });*/
+
+  }
+
+  hideCommodity(param: any){
+
+    if(param.hideItem){
+      param.hideItem = false;
+    }else{
+      param.hideItem = true;
+    }
+    //console.log("hideCommodity param.hideItem = " + param.hideItem);
+    this.updateUrl();
+  }
+
+  adjustPrices() {
+    console.log("adjustPrices called");
+    for (let commodity of this.commodities) {
+      //commodity.adjustedPrice = commodity.basePrice * commodity.supplyFactor * commodity.demandFactor * commodity.eventFactor;
+      const priceFactors = 1 + commodity.supplyFactor + commodity.demandFactor + commodity.eventFactor;
+      commodity.adjustedPrice = commodity.basePrice * priceFactors;
+    }
+    this.updateUrl();
+  }
+  //id: string = '';
+
+  loadFromQueryString() {
+    try {
+      const queryParams = new URLSearchParams(this.queryString);
+      const commoditiesParam = queryParams.get('commodities');
+      //console.log("queryParams = " + queryParams);
+      if (commoditiesParam) {
+        this.commodities = JSON.parse(commoditiesParam);
+      }
+
+      const timestampParam = queryParams.get('timestamp');
+      if (timestampParam) {
+        this.timestamp = new Date(timestampParam);
+      }
+
+      const ro = queryParams.get('ro');
+      if (ro) {
+        this.ro = JSON.parse(ro);
+        this.readOnly = this.ro == 1 ? true : false;
+      }
+
+      // Update the URL
+      this.updateUrl();
+    } catch (error) {
+      console.error('Error parsing query string:', error);
+    }
+
+    //this.postService.getCommoditiesByQueryString()
+  }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      if (params['commodities']) {
+        this.commodities = JSON.parse(params['commodities']);
+        this.timestamp = new Date(params['timestamp']);
+        this.ro = JSON.parse(params['ro']);
+        this.readOnly = this.ro == 1 ? true : false;
+      }
+
+      this.urlWithParams = this.router.serializeUrl(this.router.createUrlTree([], {
+        relativeTo: this.route,
+        queryParams: {
+          commodities: JSON.stringify(this.commodities),
+          timestamp: this.timestamp,
+          ro: this.ro,
+        },
+      }));
+
+      this.readOnlyURL = this.router.serializeUrl(this.router.createUrlTree([], {
+        relativeTo: this.route,
+        queryParams: {
+          commodities: JSON.stringify(this.commodities),
+          timestamp: this.timestamp,
+          ro: 1,
+        },
+      }));
+
+      console.log('params = ' + params['commodities']);
+
+    });
+  }
+
 }

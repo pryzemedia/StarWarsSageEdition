@@ -1,0 +1,18 @@
+<button [class]="buttonClass" type="button" data-bs-toggle="collapse"
+        [attr.data-bs-target]="'#' + collapseID" aria-expanded="false"
+        [attr.aria-controls]="collapseID">
+  <ng-container *ngIf="matIcon.length > 0; else noIcon">
+      <span class="d-flex align-items-center">
+        <mat-icon class="me-2" fontIcon="{{matIcon}}"></mat-icon>
+        {{btnTxt}}
+      </span>
+  </ng-container>
+  <ng-template #noIcon>
+    {{btnTxt}}
+  </ng-template>
+</button>
+<div class="collapse" [id]="collapseID">
+  <div class="card card-body">
+    <ng-content></ng-content>
+  </div>
+</div>
